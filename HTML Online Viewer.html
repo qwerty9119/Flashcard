@@ -11,7 +11,7 @@
     <!-- Load JS Beautifier for code formatting -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js"></script>
     <style>
-        /* Custom styles */
+        /* Custom styles for light theme */
         body { 
             font-family: 'Inter', sans-serif; 
             height: 100vh; 
@@ -19,6 +19,7 @@
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
+            /* Light gray background set on body tag */
         }
         /* Style for the ACE editor container */
         #editor {
@@ -32,7 +33,7 @@
             width: 100%;
             height: 100%;
             border: none;
-            background-color: white;
+            background-color: white; /* Ensure it's white for the light theme */
         }
         /* Ensure the main content area takes remaining height */
         #content-area {
@@ -41,13 +42,13 @@
         }
     </style>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50"> <!-- Reverted to light background -->
 
     <!-- Header & Controls -->
-    <header class="bg-white shadow-lg py-3 flex-shrink-0 px-4"> <!-- Adjusted padding here for edge-to-edge alignment -->
-        <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 w-full"> <!-- Removed px-4 here -->
-            <!-- Modernized H1 Title with Gradient -->
-            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">
+    <header class="bg-white shadow-lg py-3 flex-shrink-0 px-4"> <!-- Reverted to white background and standard shadow -->
+        <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 w-full">
+            <!-- UPDATED: Changed font weight to semibold and color to text-gray-700 to match the neutral tone of the content H1 -->
+            <h1 class="text-3xl font-semibold text-gray-700">
                 HTML Editor
             </h1>
             <div class="flex flex-wrap gap-2">
@@ -80,12 +81,12 @@
         </div>
     </header>
 
-    <!-- Main Content Area: Now Fills Full Width -->
+    <!-- Main Content Area: Fills Full Width -->
     <div id="content-area" class="w-full grid grid-cols-1 lg:grid-cols-2 gap-4 h-full px-4 lg:px-0 pt-4 pb-4">
         
-        <!-- Editor Panel Container (Added horizontal margin on large screens for space) -->
-        <div id="editor-container" class="bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden h-full lg:ml-4">
-            <!-- H2 Title for Editor -->
+        <!-- Editor Panel Container - ADDED BORDER FOR VISIBILITY -->
+        <div id="editor-container" class="bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden h-full lg:ml-4">
+            <!-- H2 Title for Editor: Light theme colors -->
             <h2 class="p-3 text-xl font-semibold bg-gray-100 text-gray-700 border-b border-gray-200 tracking-wide flex-shrink-0">
                 HTML Code Editor
             </h2>
@@ -113,9 +114,9 @@
             </div>
         </div>
 
-        <!-- Preview Panel Container (Added horizontal margin on large screens for space) -->
-        <div id="preview-container" class="bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden h-full lg:mr-4">
-            <!-- H2 Title for Preview -->
+        <!-- Preview Panel Container - ADDED BORDER FOR VISIBILITY -->
+        <div id="preview-container" class="bg-white rounded-xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden h-full lg:mr-4">
+            <!-- H2 Title for Preview: Light theme colors -->
             <h2 class="p-3 text-xl font-semibold bg-gray-100 text-gray-700 border-b border-gray-200 tracking-wide flex-shrink-0">
                 Live Preview
             </h2>
@@ -141,7 +142,8 @@
             }
 
             editor = ace.edit("editor");
-            editor.setTheme("ace/theme/chrome");
+            // NOTE: Using a light ACE theme (chrome) to match the light UI
+            editor.setTheme("ace/theme/chrome"); 
             editor.getSession().setMode("ace/mode/html");
             editor.setOptions({
                 fontSize: "14pt",
