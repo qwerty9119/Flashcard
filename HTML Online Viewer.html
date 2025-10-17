@@ -1,212 +1,274 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-97902571-5"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'UA-97902571-5');
-    </script>
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4523112948468173"
-        crossorigin="anonymous"></script>
-
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width">
-    <meta name="description"
-        content="HTML Online Viewer is a fast HTML editor and formatter with an instant live preview. View, edit and format your HTML in real-time!">
-    <meta name="keywords"
-        content="HTML Online Viewer,Online HTML Viewer,HTML Preview,HTML Viewer,HTML Editor,Highlight HTML,HTML live">
-
-    <title>HTML Online Viewer</title>
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/css/bootstrap.min.css"
-        integrity="sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="//www.onlineviewer.net/onlineviewer.v2.css">
-    <link rel="icon" href="//www.onlineviewer.net/favicon.ico" />
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-css.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js"></script>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Offline HTML Code Viewer & Editor</title>
+    <!-- Load Tailwind CSS via CDN for responsive styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load ACE Editor for professional code editing -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.37.1/ace.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.4.1/dist/js/bootstrap.min.js"
-        integrity="sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd"
-        crossorigin="anonymous"></script>
-
+    <!-- Load JS Beautifier for code formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.15.1/beautify-html.min.js"></script>
+    <style>
+        /* Custom styles */
+        body { font-family: 'Inter', sans-serif; height: 100vh; margin: 0; display: flex; flex-direction: column; overflow: hidden; }
+        /* Style for the ACE editor container */
+        #editor {
+            width: 100%;
+            height: 100%;
+            min-height: 300px;
+            font-size: 14px;
+            border-radius: 0.5rem;
+        }
+        /* Style for the iframe preview */
+        #livePreview {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: white;
+        }
+        /* Ensure the main content area takes remaining height */
+        #content-area {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+    </style>
 </head>
+<body class="bg-gray-50">
 
-<body>
-    <div class="modal fade" id="aboutModal" tabindex="-1" role="dialog" aria-labelledby="aboutModalLabel">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
-                            aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="aboutModalLabel">About</h4>
-                </div>
-                <div class="modal-body">
-                    <strong>HTML Online Viewer</strong> is a fast HTML editor and formatter with an instant live
-                    preview. View, edit and format your HTML in real-time!
-                    <p>
-                    <p>
-                        You can see the <strong>live preview</strong> of the HTML on the same page, but you can also
-                        show the preview in a new separate tab where it is more stable.
-                    <p>
-                    <p>
-                        The viewer highlights the HTML for better readability using the high
-                        performance editor: <a href="https://ace.c9.io/" target="_blank"><strong>Ace</strong></a> (<a
-                            href="https://github.com/ajaxorg/ace/blob/master/LICENSE" target="_blank">license</a>).
-                        <strong>The highlighted code</strong> can also be shown in a separate tab where it is
-                        rendered at once (not in the editor), so the browser's native search function can be used
-                        (Ctrl+F). This highlighting is done using a reliable third-party library: <a
-                            href="https://highlightjs.org/" target="_blank"><strong>highlight.js</strong></a> (<a
-                            href="https://github.com/isagalaev/highlight.js/blob/master/LICENSE"
-                            target="_blank">license</a>).
-                    <p>
-                    <p>
-                        <strong>The formatting</strong> function can be useful too. It is done using an efficient
-                        third-party library: <a href="http://jsbeautifier.org/" target="_blank"><strong>JS
-                                Beautifier</strong></a> (<a
-                            href="https://github.com/beautify-web/js-beautify/blob/master/LICENSE"
-                            target="_blank">license</a>).
-                    <p>
-                    <p>
-                        Available functions:
-                    <ul>
-                        <li><strong>Preview (Alt+1)</strong> button renders the HTML code in a new tab.</li>
-                        <li><strong>Highlight (Alt+2)</strong> button shows the entire highlighted code in a new tab.
-                        </li>
-                        <li><strong>Format (Alt+3)</strong> button beautifies the HTML text.</li>
-                        <li><strong>Expand all (Alt+4)</strong> button expands all elements.</li>
-                        <li><strong>Collapse all (Alt+5)</strong> button collapses all elements.</li>
-                        <li><strong>Sample (Alt+6)</strong> button puts a sample HTML text into the editor.</li>
-                        <li><strong>Clear (Alt+7)</strong> button erases the editor text.</li>
-                    </ul>
-                    <p>
-                    <p>
-                        This website uses cookies for traffic monitoring and running ads. If you don't
-                        want to allow cookies, you can disable them in <strong>Privacy settings</strong>.
-                    <p>
-                    <p>
-                        <strong>All input is processed locally (not by a server)</strong> and it is thus 100% safe and
-                        private.
-                    <p>
-                    <p>
-                        Internal libraries used:
-                    <ul>
-                        <li><a href="https://jquery.com/" target="_blank">jQuery</a> (<a
-                                href="https://github.com/jquery/jquery/blob/master/LICENSE.txt"
-                                target="_blank">license</a>)</li>
-                        <li><a href="https://getbootstrap.com/" target="_blank">Bootstrap</a> (<a
-                                href="https://github.com/twbs/bootstrap/blob/master/LICENSE"
-                                target="_blank">license</a>)</li>
-                        <li><a href="https://web.archive.org/web/20170729144500/http://fontawesome.io/"
-                                target="_blank">Font Awesome</a> (<a
-                                href="https://web.archive.org/web/20170730011910/http://fontawesome.io/license"
-                                target="_blank">license</a>)</li>
-                    </ul>
-                    <p>
-                    <p>
-                        Check other viewers:
-                    <ul>
-                        <li><a href="https://javascript.onlineviewer.net" target="_blank">JavaScript Online Viewer</a>
-                        </li>
-                        <li><a href="https://css.onlineviewer.net" target="_blank">CSS Online Viewer</a></li>
-                        <li><a href="https://xml.onlineviewer.net" target="_blank">XML Online Viewer</a></li>
-                        <li><a href="https://json.onlineviewer.net" target="_blank">JSON Online Viewer</a></li>
-                        <li><a href="https://text.onlineviewer.net" target="_blank">Text Online Viewer</a></li>
-                    </ul>
-                    <p>
-                    <p>
-                        <strong>The favicon</strong> is from the <a href="https://github.com/KDE/oxygen-icons"
-                            target="_blank">Oxygen Icons</a> set made by <a href="https://www.kde.org/"
-                            target="_blank">KDE</a> (<a href="https://github.com/KDE/oxygen-icons/blob/master/COPYING"
-                            target="_blank">license</a>)
-                    <p>
-                    <p>
-                        If you have any suggestions, please use the following contact email address:
-                        <br><img src="//www.onlineviewer.net/email_address.png" alt="contact email address" />
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
+    <!-- Header & Controls -->
+    <header class="bg-white shadow-lg p-3">
+        <div class="flex flex-col md:flex-row justify-between items-center space-y-2 md:space-y-0 max-w-7xl mx-auto">
+            <!-- Modernized H1 Title with Gradient -->
+            <h1 class="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">
+                HTML Editor
+            </h1>
+            <div class="flex flex-wrap gap-2">
+                
+                <!-- Import Button -->
+                <input type="file" id="fileInput" accept=".html" class="hidden" onchange="importCode()">
+                <button onclick="document.getElementById('fileInput').click()" 
+                        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                    Import .html
+                </button>
+
+                <!-- Export Button -->
+                <button onclick="exportCode()" 
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                    Export Code
+                </button>
+                
+                <!-- Format Button -->
+                <button onclick="formatCode()" 
+                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                    Format Code
+                </button>
+
+                <!-- Open in New Tab Button -->
+                <button onclick="runInNewTab()" 
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300">
+                    Run in New Tab
+                </button>
             </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area: Split View -->
+    <div id="content-area" class="max-w-7xl mx-auto w-full p-4 grid grid-cols-1 lg:grid-cols-2 gap-4">
+        
+        <!-- Editor Panel -->
+        <div class="bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden">
+            <!-- Modernized H2 Title for Editor -->
+            <h2 class="p-3 text-xl font-semibold bg-indigo-50 text-indigo-800 border-b border-indigo-200 tracking-wide">
+                HTML Code Editor
+            </h2>
+            <div id="editor" class="flex-grow">
+                &lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;My Live Page&lt;/title&gt;
+    &lt;style&gt;
+        body { font-family: sans-serif; background-color: #f0f0f0; padding: 20px; text-align: center; }
+        h1 { color: #333; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); display: inline-block; }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+    &lt;div class="card"&gt;
+        &lt;h1&gt;Live Preview is Working!&lt;/h1&gt;
+        &lt;p&gt;Edit the code on the left to see instant changes here.&lt;/p&gt;
+        &lt;button onclick="alert('Hello from the iframe!')" style="background-color: #007bff; color: white; padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer;"&gt;Click Me&lt;/button&gt;
+    &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+            </div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden">
+            <!-- Modernized H2 Title for Preview -->
+            <h2 class="p-3 text-xl font-semibold bg-indigo-50 text-indigo-800 border-b border-indigo-200 tracking-wide">
+                Live Preview
+            </h2>
+            <iframe id="livePreview" title="Live HTML Preview" srcdoc="" class="flex-grow"></iframe>
         </div>
     </div>
-    <div id="view">
-        <div id="sidebar">
-            <h1 class="header"><a href="https://html.onlineviewer.net/" class="linkColor">HTML Online Viewer</a></h1>
-            <div id="textViewButtons">
-                <button onclick="openHtmlPreview()" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-eye fa-lg fa-fw"></i> Preview (Full page)</button>
-                <button onclick="openHighlightedSyntax()" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-edit fa-lg fa-fw"></i> Highlight (Full page)</button>
-                <button onclick="formatHtml();" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-indent fa-lg fa-fw"></i> Format</button>
-                <button onclick="unfoldAll()" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-plus-square fa-lg fa-fw"></i> Expand all</button>
-                <button onclick="foldAll();" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-minus-square fa-lg fa-fw"></i> Collapse all</button>
-                <button id="btnSample" onclick="insertSample()" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-file-text-o fa-lg fa-fw"></i> Sample</button>
-                <button id="btnClear" onclick="clearTextInput()" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-file-o fa-lg fa-fw"></i> Clear</button>
-                <button id="btnImport" onclick="importText()" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-upload fa-lg fa-fw"></i> Import</button>
-                <button id="btnExport" onclick="exportText()" class="btn btn-default btn-sm btn-block"><i
-                        class="fa fa-download fa-lg fa-fw"></i> Export</button>
-                <input type="file" id="inpImport" onclick="this.value=null;" accept="text/*" style="display:none">
-            </div>
-            <div id="aboutButtons">
-                <button style="margin-bottom: 5px; margin-top: 5px;" id="btnCookies"
-                    onclick="googlefc.callbackQueue.push(googlefc.showRevocationMessage)"
-                    class="btn btn-default btn-sm btn-block"><i class="fa fa-shield fa-lg fa-fw"></i> Privacy
-                    settings</button>
-                <div id="aboutButton" data-toggle="modal" data-target="#aboutModal">
-                    <button id="btnAbout" class="btn btn-default btn-sm btn-block"><i
-                            class="fa fa-question-circle-o fa-lg fa-fw"></i> About</button>
-                </div>
-                <div class="copyrightText">
-                    <span id="copyright"></span> <a id="copyrightName"
-                        href="https://www.onlineviewer.net">OnlineViewer.net</a><br />
-                </div>
-            </div>
-        </div>
-        <div id="content">
-            <div id="textView">
-                <div id="editor">Put your HTML text here</div>
-            </div>
-            <div id="livePreview">
-                <iframe id="liveFrame" title="Live HTML Preview" srcdoc=""
-                    sandbox="allow-forms allow-modals allow-orientation-lock allow-pointer-lock allow-popups allow-presentation allow-scripts"></iframe>
-            </div>
-        </div>
-        <div id="rightsidebar">
 
-        </div>
-        <div id="leftbottomabs">
-            <script async
-                src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4523112948468173"
-                crossorigin="anonymous"></script>
-            <!-- Sidebar bottom -->
-            <ins class="adsbygoogle" style="display:inline-block;width:200px;height:200px"
-                data-ad-client="ca-pub-4523112948468173" data-ad-slot="4008251510"></ins>
-            <script>
-                (adsbygoogle = window.adsbygoogle || []).push({});
-            </script>
-        </div>
-    </div>
+    <!-- JavaScript Logic -->
     <script>
-        var pageType = 'HTML';
-    </script>
-    <script src="//www.onlineviewer.net/onlineviewer.min.v3.js"></script>
-</body>
+        let editor;
+        
+        // --- Core Functions ---
 
+        /**
+         * Initializes the ACE editor and sets up the live update listener.
+         */
+        function initializeEditor() {
+            // Check if ACE is available
+            if (typeof ace === 'undefined') {
+                console.error("ACE Editor failed to load.");
+                document.getElementById('editor').textContent = "Error: ACE Editor library failed to load from CDN. Please check your internet connection and reload.";
+                return;
+            }
+
+            editor = ace.edit("editor");
+            editor.setTheme("ace/theme/chrome");
+            editor.getSession().setMode("ace/mode/html");
+            editor.setOptions({
+                fontSize: "14pt",
+                wrap: true,
+                useWorker: false, // Disable web worker validation for better offline performance
+            });
+
+            // Set initial content and run the first update
+            updatePreview();
+
+            // Set up listener for real-time updates
+            editor.getSession().on('change', () => {
+                // Throttle updates slightly for performance
+                clearTimeout(window.previewTimer);
+                window.previewTimer = setTimeout(updatePreview, 200);
+            });
+        }
+
+        /**
+         * Updates the content of the live preview iframe.
+         */
+        function updatePreview() {
+            if (!editor) return;
+            const code = editor.getValue();
+            const iframe = document.getElementById('livePreview');
+            
+            // Setting srcdoc is the fastest way to render HTML in an iframe
+            // We use setTimeout to ensure it runs asynchronously and doesn't block the UI
+            setTimeout(() => {
+                iframe.srcdoc = code;
+            }, 0);
+        }
+
+        /**
+         * Imports an HTML file from the user's computer into the editor.
+         */
+        function importCode() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                console.warn("No file selected.");
+                return;
+            }
+
+            if (!file.name.toLowerCase().endsWith('.html')) {
+                // IMPORTANT: Replacing alert() with a console warning as per instructions.
+                console.warn('Import failed: Please select a valid .html file.');
+                return;
+            }
+
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                if (editor) {
+                    editor.setValue(e.target.result, 1); // Set value, cursor at end
+                    updatePreview();
+                }
+            };
+
+            reader.onerror = () => {
+                console.error("Error reading file:", reader.error);
+                // IMPORTANT: Replacing alert() with a console warning as per instructions.
+                console.warn("Import failed: Failed to read file.");
+            };
+
+            reader.readAsText(file);
+        }
+
+        /**
+         * Exports the current editor content as an HTML file.
+         */
+        function exportCode() {
+            if (!editor) return;
+            const code = editor.getValue();
+            const blob = new Blob([code], { type: 'text/html' });
+            
+            // Create a temporary link element
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'exported_code.html';
+            
+            // Programmatically click the link to trigger the download
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            URL.revokeObjectURL(a.href); // Clean up the object URL
+        }
+
+        /**
+         * Opens the current HTML code in a new, isolated browser tab (about:blank).
+         */
+        function runInNewTab() {
+            if (!editor) return;
+            const code = editor.getValue();
+            
+            const newWindow = window.open('about:blank', '_blank');
+            if (newWindow) {
+                // Write the code directly to the new window's document
+                newWindow.document.write(code);
+                newWindow.document.close();
+            } else {
+                // IMPORTANT: Replacing alert() with a console warning as per instructions.
+                console.warn("Run failed: The new tab was blocked by the browser. Please allow popups for this page.");
+            }
+        }
+
+        /**
+         * Formats the HTML code using js-beautify.
+         */
+        function formatCode() {
+            if (!editor || typeof html_beautify === 'undefined') {
+                // IMPORTANT: Replacing alert() with a console warning as per instructions.
+                console.warn("Format failed: Formatting library not loaded.");
+                return;
+            }
+            const currentCode = editor.getValue();
+            // Use the beautify library to format the HTML
+            const formattedCode = html_beautify(currentCode, {
+                indent_size: 4,
+                indent_char: ' ',
+                unformatted: ['a', 'sub', 'sup', 'b', 'i', 'u', 'span'],
+                wrap_line_length: 80,
+                preserve_newlines: true
+            });
+            editor.setValue(formattedCode, -1); // Set value, cursor at start
+        }
+
+        // --- Initialization ---
+
+        // Wait for the document to fully load before initializing the editor
+        window.onload = initializeEditor;
+    </script>
+</body>
 </html>
